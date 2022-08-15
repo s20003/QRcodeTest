@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">QRcodeTest</string>
+    <string name="qr_button_text">QR Camera Launch</string>
+</resources>
