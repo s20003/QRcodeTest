@@ -61,15 +61,20 @@ class MainActivity : AppCompatActivity() {
             val namePosition2 = resultQR.lastIndexOf("201,")
             val viewTest2 = resultQR.substring(namePosition2 + 6)
             val commaPosition2 = viewTest2.indexOf(",", 6)
-            val viewProduction2 = viewTest2.substring(0, commaPosition2)
+            if (commaPosition2 != -1) {
+                val viewProduction2 = viewTest2.substring(0, commaPosition2)
 
-            if (viewProduction1 != viewProduction2) {
-                // Toast.makeText(this, "Scanned: ${viewProduction1},${viewProduction2}", Toast.LENGTH_LONG).show()
-                binding.textView1.text = viewProduction1
-                binding.textView2.text = viewProduction2
+                if (viewProduction1 != viewProduction2) {
+                    // Toast.makeText(this, "Scanned: ${viewProduction1},${viewProduction2}", Toast.LENGTH_LONG).show()
+                    binding.textView1.text = viewProduction1
+                    binding.textView2.text = viewProduction2
+                } else {
+                    // Toast.makeText(this, "Scanned: $viewProduction1", Toast.LENGTH_LONG).show()
+                    binding.textView1.text = viewProduction1
+                }
+
             } else {
-                // Toast.makeText(this, "Scanned: $viewProduction1", Toast.LENGTH_LONG).show()
-                binding.textView1.text = viewProduction1
+                Toast.makeText(this, "指定のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
             }
         }
 
