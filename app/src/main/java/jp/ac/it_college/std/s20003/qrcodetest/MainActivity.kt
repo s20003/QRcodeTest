@@ -12,6 +12,11 @@ import jp.ac.it_college.std.s20003.qrcodetest.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var resultQR: String
+
+    private var num: Int = 0
+    private var viewProduct: String = ""
+    // private var incomplete: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -45,52 +50,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        /*
         var startPoint: Int
-        var namePosition = 0
-         */
+        var namePosition = -1
 
-        val namePosition1 = resultQR.indexOf("201,")
-        if (namePosition1 == -1) {
-            Toast.makeText(this, "指定のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
-        } else {
-            val viewTest1 = resultQR.substring(namePosition1 + 6)
-            val commaPosition1 = viewTest1.indexOf(",", 6)
-            val viewProduction1 = viewTest1.substring(0, commaPosition1)
-
-            val namePosition2 = resultQR.lastIndexOf("201,")
-            val viewTest2 = resultQR.substring(namePosition2 + 6)
-            val commaPosition2 = viewTest2.indexOf(",", 6)
-            if (commaPosition2 != -1) {
-                val viewProduction2 = viewTest2.substring(0, commaPosition2)
-
-                if (viewProduction1 != viewProduction2) {
-                    // Toast.makeText(this, "Scanned: ${viewProduction1},${viewProduction2}", Toast.LENGTH_LONG).show()
-                    binding.textView1.text = viewProduction1
-                    binding.textView2.text = viewProduction2
-                } else {
-                    // Toast.makeText(this, "Scanned: $viewProduction1", Toast.LENGTH_LONG).show()
-                    binding.textView1.text = viewProduction1
-                }
-
-            } else {
-                Toast.makeText(this, "指定のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        /*
-        for (i in 0 until 10) {
+        for (i in 1 until 10) {
             startPoint = namePosition + 1
             namePosition = resultQR.indexOf("201,", startPoint)
             if (namePosition == -1) {
                 break
             }
-            val viewTest = resultQR.substring(namePosition + 6)
-            val commaPosition = viewTest.indexOf(",", 6)
-            val viewProduct = resultQR.substring(0, commaPosition)
+            num = i
+            val extractView = resultQR.substring(namePosition + 6)
+            val commaPosition = extractView.indexOf(",", 6)
+            if (commaPosition != -1) {
+                viewProduct = extractView.substring(0, commaPosition)
+                textInput()
+            } else if (commaPosition == -1) {
+                viewProduct = extractView.substring(0)
+                textInput()
+                // Toast.makeText(this, "次のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "その他", Toast.LENGTH_LONG).show()
+            }
         }
+    }
 
-         */
-
+    private fun textInput() {
+        when (num) {
+            1 -> {
+                binding.textView1.text = viewProduct
+            }
+            2 -> {
+                binding.textView2.text = viewProduct
+            }
+            3 -> {
+                binding.textView3.text = viewProduct
+            }
+        }
     }
 }
