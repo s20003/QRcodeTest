@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // QRコード読み込み部分
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(
         requestCode: Int,
@@ -40,7 +41,9 @@ class MainActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
+        // ↓ QRコード結果受取
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
+        // ↓ にgetRawBytesメソッドをつかう？
         resultQR = result.contents.toString()
         if (result.contents == null) {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
@@ -49,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 薬名検索部分
     private fun search() {
         var startPoint: Int
         var namePosition = -1
