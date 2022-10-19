@@ -123,7 +123,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            search()
+            if (resultQR.substring(0, 4) != "JAHIS") {
+                Toast.makeText(this, "指定のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
+            } else {
+                search()
+            }
         }
     }
 
