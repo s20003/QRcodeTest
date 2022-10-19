@@ -13,9 +13,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var resultQR: String
 
+    private lateinit var hex1: String
+    private lateinit var hex2: String
+
+    private lateinit var perfectQR: String   // 完成形をここに入れる
+
     private var num: Int = 0
     private var viewProduct: String = ""
-    // private var incomplete: String = ""
+
+    private var code1 = ""
+    private var code2 = ""
+    private var code3 = ""
+    private var code4 = ""
+    private var code5 = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +51,77 @@ class MainActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        // ↓ QRコード結果受取
         val result = IntentIntegrator.parseActivityResult(resultCode, data)
-        // ↓ にgetRawBytesメソッドをつかう？
+        // QRコードのバイナリ読み取り
+        val rawQRCode = result.rawBytes
+        hex1 = String.format("%x", rawQRCode[0])
+        hex2 = String.format("%x", rawQRCode[1])
+
         resultQR = result.contents.toString()
         if (result.contents == null) {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+        } else {
+            binaryReading()
+        }
+    }
+
+    // Binaryデータ読み取り・データ連結部分
+    private fun binaryReading() {
+        if (hex1.startsWith("3")) {
+            when(hex1.substring(1, 2)) {
+                "0" -> {
+                    code1 = resultQR
+                    Toast.makeText(this, "１つ目のQRコードを読み取りました", Toast.LENGTH_LONG).show()
+                }
+                "1" -> {
+                    if (code1 == "") {
+                        Toast.makeText(this, "順番通りに読み取ってください", Toast.LENGTH_LONG).show()
+                    } else {
+                        code2 = resultQR
+                        if (hex2.startsWith("1")) {
+                            perfectQR = code1 + code2
+                            search()
+                        }
+                        Toast.makeText(this, "２つ目のQRコードを読み取りました", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "2" -> {
+                    if (code1 == "" || code2 == "") {
+                        Toast.makeText(this, "順番通りに読み取ってください", Toast.LENGTH_LONG).show()
+                    } else {
+                        code3 = resultQR
+                        if (hex2.startsWith("2")) {
+                            perfectQR = code1 + code2 + code3
+                            search()
+                        }
+                        Toast.makeText(this, "３つ目のQRコードを読み取りました", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "3" -> {
+                    if (code1 == "" || code2 == "" || code3 == "") {
+                        Toast.makeText(this, "順番通りに読み取ってください", Toast.LENGTH_LONG).show()
+                    } else {
+                        code4 = resultQR
+                        if (hex2.startsWith("3")) {
+                            perfectQR = code1 + code2 + code3 + code4
+                            search()
+                        }
+                        Toast.makeText(this, "４つ目のQRコードを読み取りました", Toast.LENGTH_LONG).show()
+                    }
+                }
+                "4" -> {
+                    if (code1 == "" || code2 == "" || code3 == "" || code4 == "") {
+                        Toast.makeText(this, "順番通りに読み取ってください", Toast.LENGTH_LONG).show()
+                    } else {
+                        code5 = resultQR
+                        if (hex2.startsWith("4")) {
+                            perfectQR = code1 + code2 + code3 + code4 + code5
+                            search()
+                        }
+                        Toast.makeText(this, "５つ目のQRコードを読み取りました", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         } else {
             search()
         }
@@ -57,24 +132,22 @@ class MainActivity : AppCompatActivity() {
         var startPoint: Int
         var namePosition = -1
 
+        // 指定のQRコード以外を読み取ったときの処理を書く
         for (i in 1 until 10) {
             startPoint = namePosition + 1
-            namePosition = resultQR.indexOf("201,", startPoint)
+            namePosition = perfectQR.indexOf("201,", startPoint)
             if (namePosition == -1) {
                 break
             }
             num = i
-            val extractView = resultQR.substring(namePosition + 6)
+            val extractView = perfectQR.substring(namePosition + 6)
             val commaPosition = extractView.indexOf(",", 6)
             if (commaPosition != -1) {
                 viewProduct = extractView.substring(0, commaPosition)
                 textInput()
-            } else if (commaPosition == -1) {
+            } else {
                 viewProduct = extractView.substring(0)
                 textInput()
-                // Toast.makeText(this, "次のQRコードを読み取ってください", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this, "その他", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -89,6 +162,12 @@ class MainActivity : AppCompatActivity() {
             }
             3 -> {
                 binding.textView3.text = viewProduct
+            }
+            4 -> {
+                binding.textView4.text = viewProduct
+            }
+            5 -> {
+                binding.textView5.text = viewProduct
             }
         }
     }
