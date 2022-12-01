@@ -2,6 +2,7 @@
 
 package jp.ac.it_college.std.s20003.qrcodetest
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -207,6 +208,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun daysInput() {
         val day = if (productView != "") {
             "日分"
@@ -218,16 +220,16 @@ class MainActivity : AppCompatActivity() {
                 binding.daysView1.text = productView + day
             }
             2 -> {
-                binding.daysView1.text = productView + day
+                binding.daysView2.text = productView + day
             }
             3 -> {
-                binding.daysView1.text = productView + day
+                binding.daysView3.text = productView + day
             }
             4 -> {
-                binding.daysView1.text = productView + day
+                binding.daysView4.text = productView + day
             }
             5 -> {
-                binding.daysView1.text = productView + day
+                binding.daysView5.text = productView + day
             }
         }
     }
